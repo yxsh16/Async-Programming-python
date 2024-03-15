@@ -2,10 +2,15 @@ import asyncio                                                  # Import the asy
 import aiohttp                                                  # Import the aiohttp module for making asynchronous HTTP requests.
 import time                                                     # Import the time module to measure execution time.
 
-async def fetch(session, url):                                  # Define an asynchronous function to fetch the content of a URL.
-    async with session.get(url) as response:                    # Make an asynchronous GET request to the URL.
-        return await response.text()                            # Await the response text and return it.
-
+async def fetch(session, url):
+    try:
+        async with session.get(url) as response:                # Make an asynchronous GET request to the URL.
+            return await response.text()                           
+    except (aiohttp.ClientError, asyncio.TimeoutError) as e:
+        print(f"Error fetching {url}: {e}")
+        return None                                             # Return None or an appropriate value to indicate failure
+    
+    
 async def main():                                               # Define the main asynchronous function.
     start_time = time.time()                                    # Record the start time of the program.
     urls = [
